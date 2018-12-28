@@ -44,8 +44,12 @@ public class UserDaoService {
     }
 
     public UserDto createUser(User user) {
-        userRepo.createUser(user);
-        UserDto userDto = new ModelMapper().map(user, UserDto.class);
-        return userDto;
+        try {
+            userRepo.createUser(user);
+            UserDto userDto = new ModelMapper().map(user, UserDto.class);
+            return userDto;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

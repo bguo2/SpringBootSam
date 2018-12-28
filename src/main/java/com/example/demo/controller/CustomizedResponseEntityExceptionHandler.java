@@ -14,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 
-@ControllerAdvice
+//applied to all controllers
+//@ControllerAdvice
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 

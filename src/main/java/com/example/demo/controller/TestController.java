@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.managers.UserDaoService;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -57,6 +60,9 @@ public class TestController {
     @PostMapping(path = "/create")
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user){
         UserDto savedUser = manager.createUser(user);
+        //starting from Spring boot 5 (2.0.5): use ResponseStatusException to throw any status code.
+        if(savedUser == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "savedUser is null");
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getEmail()).toUri();
         return ResponseEntity.created(location).build();
