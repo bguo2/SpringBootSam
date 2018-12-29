@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -59,12 +60,14 @@ public class TestController {
 
     @PostMapping(path = "/create")
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user){
-        UserDto savedUser = manager.createUser(user);
-        //starting from Spring boot 5 (2.0.5): use ResponseStatusException to throw any status code.
-        if(savedUser == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "savedUser is null");
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedUser.getEmail()).toUri();
-        return ResponseEntity.created(location).build();
+        try {
+            UserDto savedUser = manager.createUser(user);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(savedUser.getEmail()).toUri();
+            return ResponseEntity.created(location).build();
+        } catch (Exception e) {
+            //starting from Spring boot 5 (2.0.5): use ResponseStatusException to throw any status code.
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+        }
     }
 }
