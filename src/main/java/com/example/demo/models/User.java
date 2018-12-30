@@ -1,9 +1,15 @@
 package com.example.demo.models;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
+@Entity
 public class User {
+    @Id
+    private long id;
+
     @Size(min = 2)
     private String name;
 
@@ -17,6 +23,14 @@ public class User {
     public User(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
