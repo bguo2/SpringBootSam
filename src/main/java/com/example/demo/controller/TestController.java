@@ -46,7 +46,7 @@ public class TestController {
         return CompletableFuture.completedFuture(resources);
     }
 
-    @GetMapping(path = "/query/{email}")
+    @GetMapping(path = "/query/{email}", produces = "application/json")
     public Resource<UserDto> getUser(@PathVariable String email) {
         UserDto user = manager.getUser(email);
         if (user == null)
